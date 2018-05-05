@@ -2,21 +2,43 @@
 #define ENTITY_H
 #pragma once
 #include<map>
+#include<vector>
 #include"Enums.h"
 
-class AComponent;
+class Health;
+class IControl;
+class Weapon;
+class View;
+class Body;
+class Physics;
 
 class Entity
 {
 public:
 	Entity();
-	static int lastId;
-	int id;
+	std::vector<Group> targetsGroups;
+	int getId();
+	void setGroup(Group group);
+	Group getGroup();
+	void update();
+	void render();
+
+	Body *body;
+	Physics *physics;
+	Health *health;
+	IControl *control;
+	Weapon *weapon;
+	View *view;
+
+	//std::map < ComponentName, AComponent *> components;
+	~Entity();
+
+private:
 	Group group;
 	EntityType type;
-	std::map < ComponentName, AComponent *> components;
-	~Entity();
+	static int lastId;
+	int id;
 };
-	
+
 
 #endif // !ENTITY_H

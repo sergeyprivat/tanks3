@@ -1,15 +1,14 @@
 #ifndef BODY_H
 #define BODY_H
 #include "stdafx.h"
-#include"Entity.h"
-#include"AComponent.h"
+#include "Enums.h"
+#include "Entity.h"
 
-class Entity;
-
-class Body: AComponent
+class Body
 {
 public:
-	Body(Entity *entity);
+	Body(Entity &entity);
+	Entity *entity;
 	bool testCollision(Entity &otherEntity);
 	int getX();
 	void setX(int x);
@@ -17,6 +16,7 @@ public:
 	void setY(int y);
 	Direction getDirection();
 	void setDirection(Direction direct);
+	Body *getBody();
 	virtual ~Body();
 
 

@@ -1,17 +1,18 @@
 #include "stdafx.h"
 #include "Weapon.h"
-#include "Bullet.h"
+//#include "Bullet.h"
 #include"EntityCreator.h"
 
 
 
-Weapon::Weapon(Entity * ent)
+Weapon::Weapon(Entity &ent)
 {
-	entity = ent;
+	entity = &ent;
 }
 
 void Weapon::shoot()
 {
+	/*
 	Entity *bullet =  EntityCreator::getEntity(BulletInst);
 	std::vector<Entity *> targets = entity->getTargets();
 	std::vector<Entity *> group = entity->getGroup();
@@ -22,6 +23,9 @@ void Weapon::shoot()
 	bullet->getBody()->setY(entity->getBody()->getY());
 	bullet->getBody()->setDirection(entity->getBody()->getDirection());
 	entity->notifyObservers(Signal::CreateEntity, bullet);
+	
+	*/
+	
 	
 }
 

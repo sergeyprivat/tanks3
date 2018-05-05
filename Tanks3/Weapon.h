@@ -1,19 +1,17 @@
 #ifndef WEAPON
 #define WEAPON
 #pragma once
-#include "IWeapon.h"
 #include"Entity.h"
 
-class Weapon :
-	public IWeapon
+
+class Weapon 
 {
 public:
-	Weapon(Entity *ent);
-	void shoot();
-
-	virtual ~Weapon();
-private:
+	Weapon(Entity &ent);
 	Entity * entity;
+	void shoot();
+	virtual ~Weapon();
+
 };
 
 #endif // !WEAPON

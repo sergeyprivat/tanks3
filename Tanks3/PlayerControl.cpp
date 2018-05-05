@@ -4,9 +4,9 @@
 
 
 
-PlayerControl::PlayerControl(Entity * entity)
+PlayerControl::PlayerControl(Entity &ent)
 {
-	ent = entity;
+	entity = &ent;
 }
 
  Command PlayerControl::getCommand()

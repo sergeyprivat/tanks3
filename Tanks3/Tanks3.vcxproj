@@ -145,12 +145,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AComponent.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="BotControl.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityCreator.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Health.h" />
+    <ClInclude Include="IControl.h" />
+    <ClInclude Include="IEntityCreator.h" />
+    <ClInclude Include="IObservable.h" />
+    <ClInclude Include="IObserver.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerControl.h" />
     <ClInclude Include="stdafx.h" />
@@ -159,11 +164,15 @@
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AComponent.cpp" />
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="BotControl.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityCreator.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Health.cpp" />
+    <ClCompile Include="IControl.cpp" />
+    <ClCompile Include="IObservable.cpp" />
+    <ClCompile Include="IObserver.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PlayerControl.cpp" />
     <ClCompile Include="stdafx.cpp" />

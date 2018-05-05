@@ -25,10 +25,6 @@ enum Group
 	Players, Enemies, Neutrals
 };
 
-enum ComponentName
-{
-	Body, Health, Phisics, Weapon, Control
-};
 
 enum Signal
 {

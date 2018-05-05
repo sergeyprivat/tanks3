@@ -7,15 +7,16 @@
 class Health 
 {
 public:
-	Health(Entity *ent);
+	Health(Entity &ent);
+	Entity *entity;
 	void hit(int damage);
 	void setHitPoints(int points);
 	int getHitpoints();
 	virtual ~Health();
 
 private:
-	Entity *entity;
 	int hitPoints;
+	
 
 };
 

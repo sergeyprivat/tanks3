@@ -2,9 +2,9 @@
 #include "body.h"
 
 
-Body::Body(Entity *ent)
+Body::Body(Entity &ent)
 {
-	setEntity(*ent);
+	entity = &ent;
 	x = 0;
 	y = 0;
 	direct = Up;
@@ -14,12 +14,14 @@ Body::Body(Entity *ent)
 // return true if point not available
 bool Body::testCollision(Entity &otherEntity)
 {
-	int oX_ = 0;
-	int oY_ = 0;
-	if (otherEntity.components[ComponentName::Body])
+	Body *otherBody; 
+	int oX_ = -1;
+	int oY_ = -1;
+	if (otherEntity.body)
 	{
-		 oX_ = static_cast<Body *>(otherEntity.components[ComponentName::Body])->getX();
-		 oY_ = static_cast<Body *>(otherEntity.components[ComponentName::Body])->getY();
+		otherBody = otherEntity.body;
+		 oX_ = otherBody->getX();
+		 oY_ = otherBody->getY();
 	}
 	
 	if (x == oX_ && y == oY_)
@@ -60,6 +62,11 @@ Direction Body::getDirection()
 void Body::setDirection(Direction direct)
 {
 	this->direct = direct;
+}
+
+Body * Body::getBody()
+{
+	return this;
 }
 
 

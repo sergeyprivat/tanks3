@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "View.h"
+#include "Body.h"
 
 
-View::View(Entity *ent)
+View::View(Entity &ent)
 {
-	this->entity = ent;
+	entity = &ent;
 }
 
 char View::getSymbol()
@@ -39,8 +40,20 @@ void View::setCursorPosition()
 
 	hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	Position.X = entity->getBody()->getX();
-	Position.Y = entity->getBody()->getY();
+	Body *thisBody_;
+	
+	if (entity->body)
+	{
+		thisBody_ = entity->body;
+
+	}
+	else
+	{
+		return;
+	}
+
+	Position.X = thisBody_->getX();
+	Position.Y = thisBody_->getY();
 	SetConsoleCursorPosition(hOut, Position);
 }
 

@@ -2,11 +2,9 @@
 #include "BotControl.h"
 #include"Game.h"
 
-
-
-BotControl::BotControl(Entity * entity)
+BotControl::BotControl(Entity &ent)
 {
-	this->entity = entity;
+	entity =  &ent ;
 }
 
 Command BotControl::getCommand()

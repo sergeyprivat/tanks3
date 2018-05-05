@@ -3,9 +3,9 @@
 
 
 
-Health::Health(Entity * ent)
+Health::Health(Entity &ent)
 {
-	entity = ent;
+	entity = &ent;
 }
 
 void Health::hit(int damage)

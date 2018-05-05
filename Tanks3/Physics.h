@@ -1,19 +1,21 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 #pragma once
-#include "IMovable.h"
 #include"Entity.h"
-class Physics :
-	public IMovable
+
+
+class Physics 
+	
 {
 public:
 	
-	Physics(Entity *ent);
+	Physics(Entity &ent);
+	Entity *entity;
 	void move();
 	virtual ~Physics();
 
-private:
-	Entity *entity;
+	
+
 };
 
 #endif // !PHYSICS_H

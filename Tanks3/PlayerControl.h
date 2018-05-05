@@ -5,14 +5,14 @@
 #include"Entity.h"
 #include"IControl.h"
 
-class PlayerControl: public IControl
+
+class PlayerControl : public IControl
 {
 public:
-	PlayerControl(Entity * entity);
+	PlayerControl(Entity &entity);
+	Entity * entity;
 	Command PlayerControl::getCommand();
 	virtual ~PlayerControl();
-private:
-	Entity * ent;
 
 };
 
