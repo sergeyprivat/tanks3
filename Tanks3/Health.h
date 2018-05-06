@@ -1,8 +1,8 @@
 #ifndef HEALTH_H
 #define HEALTH_H
 #pragma once
-#include"Entity.h"
 
+class Entity;
 
 class Health 
 {

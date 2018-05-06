@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "View.h"
 #include "Body.h"
+#include "Entity.h"
 
 
 View::View(Entity &ent)

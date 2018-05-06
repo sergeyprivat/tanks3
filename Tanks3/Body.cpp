@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "body.h"
+#include"Entity.h"
 
 
 Body::Body(Entity &ent)

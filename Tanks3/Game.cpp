@@ -1,5 +1,7 @@
 #include "Game.h"
 #include <windows.h> 
+#include<iostream>
+#include"EntityCreator.h"
 
 
 
@@ -14,27 +16,95 @@ void Game::stopGame() {
 
 void Game::update() {
 
-
-	int size = entities.size();
-	for (int i = 0; i < size;i++)
+	std::map<int, Entity *>::iterator it;
+	std::map<int, Entity *>::iterator it2;
+	for (it = entities.begin(); it != entities.end(); it++)
 	{
-		entities[i]->update();
+
+		int oldX_ = it->second->body->getX();
+		int	oldY_ = it->second->body->getY();
+
+		it->second->update();
+
+		//check if bullet on border field an destroy it
+		if (it->second->getEntityType() == EntityType::Bullet)
+		{
+			if (it->second->body->getX() == oldX_ &&  it->second->body->getY() == oldY_)
+			{
+				it->second->notifyObservers(Signal::DestroyEntity, it->second);
+				continue;
+			}
+			
+		}
+
+
+		//testCollision with other Entities
+		bool isCollision = false;
+
+		for (it2 = entities.begin(); it2 != entities.end(); it2++)
+
+		{
+			//skip check colision with yourself
+			if (it->second != it2->second)
+			{
+				if (it->second->body->testCollision(*it2->second))
+				{
+					isCollision = true;
+					
+					if (it->second->getEntityType() == EntityType::Bullet)
+					{
+						if (checkTarget(it->second->targetsGroups, it2->second->getGroup()))
+						{
+							if (it2->second->health)
+							{
+								it2->second->health->hit(1);
+							}
+						}
+						it->second->notifyObservers(Signal::DestroyEntity, it->second);
+					}
+				}
+
+			}
+
+		}
+
+		if (isCollision)
+		{
+			it->second->body->setX(oldX_);
+			it->second->body->setY(oldY_);
+		}
 
 	}
 
+	//add new entities in map
+	for each (Entity *newEnt in newEntities)
+	{
+		addEntity(*newEnt);
+
+	}
+	newEntities.clear();
+
+	//remove died entities from map
+	for each (int diedId in diedEntitiesID)
+	{
+		delete(entities[diedId]);
+		entities.erase(diedId);
+
+	}
+	diedEntitiesID.clear();
 
 }
 
 void Game::render() {
 
+	std::map<int, Entity *>::iterator it;
 
-	int size = entities.size();
-	for (int i = 0; i < size; i++)
+	for (it = entities.begin(); it != entities.end(); it++)
 	{
-		entities[i]->render();
+		it->second->render();
 
 	}
-		
+
 }
 
 void Game::startGame() {
@@ -73,48 +143,40 @@ void Game::startGame() {
 
 	setWalls_();
 
-	Entity *playerTank = EntityCreator::getEntity(EntityType::TankInst);
+	//set player's tank
+	Entity *playerTank = EntityCreator::getEntity(EntityType::Tank);
 	playerTank->addObserver(this);
 
-	playerTank->setGroup(players);
+	playerTank->setGroup(Group::Players);
+	playerTank->targetsGroups.push_back(Group::Enemies);
+	playerTank->targetsGroups.push_back(Group::Neutrals);
 
-	players.push_back(playerTank);
+	playerTank->body->setX(5);
+	playerTank->body->setY(5);
 	addEntity(*playerTank);
-	playerTank->getBody()->setX(5);
-	playerTank->getBody()->setY(5);
 
-	Entity *enemyT = EntityCreator::getEntity(EntityType::EnemyTankInst);
+	//set enemy's tank
+	Entity *enemyT = EntityCreator::getEntity(EntityType::EnemyTank);
 	enemyT->addObserver(this);
 
-	enemyT->getBody()->setX(20);
-	enemyT->getBody()->setY(20);
-	enemies.push_back(enemyT);
+	enemyT->body->setX(20);
+	enemyT->body->setY(20);
+	enemyT->setGroup(Group::Enemies);
+	enemyT->targetsGroups.push_back(Group::Players);
+	enemyT->targetsGroups.push_back(Group::Neutrals);
+
 	addEntity(*enemyT);
 
-	update();
-	render();
 }
 
 
 void Game::addEntity(Entity &entity) {
-	entities.push_back(&entity);
+	entities[entity.getId()] = &entity;
 }
 
 void Game::onEntityDestroyed(Entity &entity) {
-	// remove destroyed entity
-	std::vector<Entity*>::iterator it;
-	for (it = entities.end(); it != entities.begin(); )
-	{
-		it--;
-		if ((*it) == &entity)
-		{
-			delete * it;
-			it = entities.erase(it);
-		}
-
-	}
-
-
+	//add  id of entities which destryed to vector 
+	diedEntitiesID.push_back(entity.getId());
 
 }
 
@@ -139,13 +201,14 @@ void Game::handleEvent(Signal sig, Entity & sender)
 		if (&sender != nullptr)
 		{
 			sender.addObserver(this);
-			addEntity(sender);
+			newEntities.push_back(&sender);
 		}
 		break;
 	}
 	case Signal::DestroyEntity:
 	{
 		onEntityDestroyed(sender);
+
 		break;
 
 	}
@@ -163,11 +226,11 @@ void Game::handleEvent(Signal sig, Entity & sender)
 COORD Game::genPosition(int maxX, int maxY)
 {
 
-		COORD pos;
-		pos.X = rand() % (maxX + 1);
-		pos.Y = rand() % (maxY + 1);
-		return pos;
-	
+	COORD pos;
+	pos.X = rand() % (maxX + 1);
+	pos.Y = rand() % (maxY + 1);
+	return pos;
+
 }
 
 void Game::setWalls_()
@@ -199,12 +262,11 @@ void Game::setWalls_()
 			{
 				for (int y = newCoord.Y; y <= y2; y++)
 				{
-					Entity *wall = EntityCreator::getEntity(EntityType::WallInst);
+					Entity *wall = EntityCreator::getEntity(EntityType::Wall);
 					wall->addObserver(this);
-					wall->getBody()->setX(x);
-					wall->getBody()->setY(y);
-					neutral.push_back(wall);
-					wall->setGroup(neutral);
+					wall->body->setX(x);
+					wall->body->setY(y);
+					wall->setGroup(Group::Neutrals);
 					addEntity(*wall);
 
 				}
@@ -221,14 +283,13 @@ void Game::setWalls_()
 void Game::setCastle_()
 {
 	//set gold
-	Entity *gold = EntityCreator::getEntity(EntityType::GoldInst);
+	Entity *gold = EntityCreator::getEntity(EntityType::Gold);
 	gold->addObserver(this);
 	int x = Game::FIELD_WIDTH / 2;
 	int y = Game::FIELD_LENGTH - 1;
-	gold->getBody()->setX(x);
-	gold->getBody()->setY(y);
-	players.push_back(gold);
-	gold->setGroup(players);
+	gold->body->setX(x);
+	gold->body->setY(y);
+	gold->setGroup(Group::Players);
 	addEntity(*gold);
 
 	//set walls of castle
@@ -240,14 +301,12 @@ void Game::setCastle_()
 			{
 				continue;
 			}
-			Entity *wall = EntityCreator::getEntity(EntityType::WallInst);
+			Entity *wall = EntityCreator::getEntity(EntityType::Wall);
 			wall->addObserver(this);
-			wall->getBody()->setX(xw);
-			wall->getBody()->setY(yw);
-			neutral.push_back(wall);
-			wall->setGroup(neutral);
+			wall->body->setX(xw);
+			wall->body->setY(yw);
+			wall->setGroup(Group::Neutrals);
 			addEntity(*wall);
-
 
 		}
 
@@ -286,13 +345,14 @@ bool Game::isAvailablePosition_(int x, int y, int length, Direction direct)
 	}
 
 	//check if other entity busy this place
+	std::map<int, Entity *>::iterator it;
 	for (int xe = x; xe <= x2; xe++)
 	{
 		for (int ye = y; ye <= y2; ye++)
 		{
-			for each (Entity *ent in entities)
+			for (it = entities.begin(); it != entities.end(); it++)
 			{
-				if (ent->body->getX() == xe && ent->getBody()->getY() == ye)
+				if (it->second->body->getX() == xe && it->second->body->getY() == ye)
 				{
 					return false;
 				}
@@ -327,4 +387,18 @@ void Game::SetWindow_(int Width, int Height)
 
 Game::~Game()
 {
+}
+
+bool Game::checkTarget(std::vector<Group> Targets, Group entityTarget)
+{
+	bool result = false;
+
+	for each(Group target in Targets)
+	{
+		if (target == entityTarget)
+		{
+			result = true;
+		}
+	}
+	return result;
 }

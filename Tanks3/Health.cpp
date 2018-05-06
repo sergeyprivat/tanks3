@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "Health.h"
-
+#include"Entity.h"
 
 
 Health::Health(Entity &ent)
@@ -16,6 +15,11 @@ void Health::hit(int damage)
 	{
 		hitPoints -= damage;
 	}
+	if (hitPoints == 0)
+	{
+		entity->notifyObservers(Signal::DestroyEntity, entity);
+	}
+
 }
 
 void Health::setHitPoints(int points)

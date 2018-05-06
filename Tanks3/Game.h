@@ -4,8 +4,9 @@
 #include<map>
 #include <vector>
 #include "Entity.h"
+#include <windows.h>
 
-class Game
+class Game : public IObserver
 {
 public:
 	Game();
@@ -21,7 +22,7 @@ public:
 	//game options
 	static const int FIELD_LENGTH = 30;
 	static const int FIELD_WIDTH = 30;
-	static const  int NUMBER_OF_ENEMY = 5;
+	static const  int NUMBER_OF_ENEMY = 1;
 	static const  int NUMBER_OF_WALL = 10;
 	static const  int MAX_LENGTH_OF_WALL = 10;
 	// chance 1/n
@@ -37,8 +38,10 @@ public:
 	~Game();
 private:
 	std::map<int, Entity *> entities;
-	std::vector<int> newEntitiesID;
+	std::vector<Entity *> newEntities;
 	std::vector<int> diedEntitiesID;
+
+	bool checkTarget(std::vector <Group> group, Group entityTarget);
 };
 
 #endif // !GAME_H

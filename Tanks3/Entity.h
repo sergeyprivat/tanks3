@@ -4,24 +4,32 @@
 #include<map>
 #include<vector>
 #include"Enums.h"
+#include"IObserver.h"
+#include"IObservable.h"
+#include"Health.h"
+#include"IControl.h"
+#include"Weapon.h"
+#include"View.h"
+#include"Body.h"
+#include"Physics.h"
 
-class Health;
-class IControl;
-class Weapon;
-class View;
-class Body;
-class Physics;
 
-class Entity
+class Entity: public IObservable
 {
 public:
 	Entity();
 	std::vector<Group> targetsGroups;
 	int getId();
+	void setEtityType(EntityType type);
+	EntityType getEntityType();
 	void setGroup(Group group);
 	Group getGroup();
 	void update();
 	void render();
+
+	void addObserver(IObserver *o);
+	void removeObserver(IObserver *o);
+	void notifyObservers(Signal sig, Entity *entity);
 
 	Body *body;
 	Physics *physics;
@@ -29,15 +37,17 @@ public:
 	IControl *control;
 	Weapon *weapon;
 	View *view;
-
-	//std::map < ComponentName, AComponent *> components;
+		
 	~Entity();
 
 private:
 	Group group;
 	EntityType type;
 	static int lastId;
+	IObserver *observer;
 	int id;
+
+	
 };
 
 

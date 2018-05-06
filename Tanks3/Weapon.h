@@ -1,8 +1,8 @@
-#ifndef WEAPON
-#define WEAPON
+#ifndef WEAPON_H
+#define WEAPON_H
 #pragma once
-#include"Entity.h"
 
+class Entity;
 
 class Weapon 
 {
@@ -14,4 +14,4 @@ public:
 
 };
 
-#endif // !WEAPON
+#endif // !WEAPON_H

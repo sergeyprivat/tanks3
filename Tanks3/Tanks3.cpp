@@ -4,11 +4,24 @@
 #include "stdafx.h"
 #include "Entity.h"
 #include "Game.h"
+#include <ctime>
 
 
 int main()
 {
-	Game  *game = new Game();
+	srand((unsigned)time(0)); //So random numbers will be always random.
+	Game  game ;
+	game.startGame();
+
+	while (1)
+	{
+		game.update();
+		game.render();
+		Sleep(20);
+
+	}
+
+	getchar();
 
     return 0;
 }

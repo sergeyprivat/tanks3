@@ -2,7 +2,8 @@
 #define BODY_H
 #include "stdafx.h"
 #include "Enums.h"
-#include "Entity.h"
+
+class Entity;
 
 class Body
 {

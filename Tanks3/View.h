@@ -1,12 +1,10 @@
-#ifndef IVIEW_H
-#define IVIEW_H
+#ifndef VIEW_H
+#define VIEW_H
 #pragma once
-
 #include <windows.h>
 #include <iostream>
-#include"Entity.h"
 
-
+class Entity;
 
 class View 	
 {
@@ -27,4 +25,4 @@ private:
 
 };
 
-#endif // !IVIEW_H
+#endif // !VIEW_H
