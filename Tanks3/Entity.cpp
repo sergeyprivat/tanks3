@@ -50,10 +50,9 @@ void Entity::update()
 		case Command::shoot:
 		{
 			weapon->shoot();
-			break;
+			return;
 		}
-
-
+		
 		case Command::left:
 		{
 			body->setDirection(Direction::Left);
@@ -93,7 +92,6 @@ void Entity::update()
 				physics->move();
 			}
 	}
-	
 	
 	
 }
